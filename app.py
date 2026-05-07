@@ -35,150 +35,155 @@ st.set_page_config(
     },
 )
 
-# ----- Cybersecurity Theme: CSS + Matrix Rain -----
+# ----- Palmer-style Theme: CSS + Smoke Orbs -----
 
 st.markdown(
     """
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
     /* ── Design tokens ── */
     :root {
-        --green:       #00ff41;
-        --green-dim:   rgba(0,255,65,0.12);
-        --green-glow:  0 0 8px rgba(0,255,65,0.5), 0 0 20px rgba(0,255,65,0.2);
-        --cyan:        #00e5ff;
-        --cyan-dim:    rgba(0,229,255,0.12);
-        --cyan-glow:   0 0 8px rgba(0,229,255,0.5), 0 0 20px rgba(0,229,255,0.2);
-        --red:         #ff3333;
-        --orange:      #ff6600;
-        --yellow:      #ffaa00;
-        --bg:          #0a0e1a;
-        --bg-card:     #0d1117;
-        --bg-sidebar:  #080c14;
-        --border:      rgba(0,255,65,0.14);
-        --text:        #b0bec5;
-        --text-dim:    #4a5568;
-        --font:        'JetBrains Mono', 'Courier New', monospace;
+        --bg:          #080808;
+        --bg-card:     #111111;
+        --bg-card-2:   #181818;
+        --border:      rgba(255,255,255,0.07);
+        --border-hi:   rgba(255,255,255,0.14);
+        --white:       #ffffff;
+        --gray-200:    #e5e5e5;
+        --gray-400:    #a0a0a0;
+        --gray-600:    #666666;
+        --gray-800:    #222222;
+        --font:        'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
     /* ── Base ── */
-    .stApp, body {
-        background-color: var(--bg) !important;
+    body { background: var(--bg) !important; margin: 0; }
+    .stApp {
+        background: transparent !important;
         font-family: var(--font) !important;
-        color: var(--text) !important;
+        color: var(--gray-400) !important;
     }
 
-    /* ── Subtle scanlines overlay ── */
+    /* ── Floating smoke orbs (Palmer aesthetic) ── */
     .stApp::before {
         content: '';
         position: fixed;
-        inset: 0;
-        background: repeating-linear-gradient(
-            0deg,
-            transparent,
-            transparent 3px,
-            rgba(0,255,65,0.013) 3px,
-            rgba(0,255,65,0.013) 4px
-        );
+        top: -25%; right: -15%;
+        width: 70vw; height: 70vw;
+        background: radial-gradient(circle, rgba(255,255,255,0.072) 0%, rgba(255,255,255,0.018) 45%, transparent 70%);
+        filter: blur(90px);
         pointer-events: none;
-        z-index: 9998;
+        z-index: 0;
+        animation: driftA 18s ease-in-out infinite alternate;
     }
+    .stApp::after {
+        content: '';
+        position: fixed;
+        bottom: -20%; left: -15%;
+        width: 55vw; height: 55vw;
+        background: radial-gradient(circle, rgba(255,255,255,0.048) 0%, rgba(255,255,255,0.01) 50%, transparent 70%);
+        filter: blur(110px);
+        pointer-events: none;
+        z-index: 0;
+        animation: driftB 22s ease-in-out infinite alternate;
+    }
+
+    /* ── Z-index stacking: content above orbs ── */
+    [data-testid="stSidebar"],
+    [data-testid="stMain"],
+    [data-testid="stHeader"] { position: relative; z-index: 1; }
 
     /* ── Layout ── */
     .block-container {
-        padding-top: 2rem;
-        padding-bottom: 3rem;
-        max-width: 1100px;
-        animation: fadeInUp 0.55s ease-out both;
+        padding-top: 2.5rem;
+        padding-bottom: 4rem;
+        max-width: 1080px;
+        animation: fadeUp 0.6s ease-out both;
     }
 
     /* ── Sidebar ── */
     [data-testid="stSidebar"] {
-        background-color: var(--bg-sidebar) !important;
+        background: rgba(8,8,8,0.9) !important;
         border-right: 1px solid var(--border) !important;
-        animation: sidebarFade 0.5s ease-out both;
-    }
-    [data-testid="stSidebar"]::before {
-        content: '';
-        display: block;
-        height: 2px;
-        background: linear-gradient(90deg, transparent, var(--green), transparent);
-        margin-bottom: 0.25rem;
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        animation: slideLeft 0.5s ease-out both;
     }
     [data-testid="stSidebar"] h3 {
-        color: var(--green) !important;
-        font-size: 0.75rem !important;
-        letter-spacing: 0.18em !important;
+        color: var(--gray-600) !important;
+        font-size: 0.68rem !important;
+        font-weight: 500 !important;
+        letter-spacing: 0.12em !important;
         text-transform: uppercase !important;
     }
 
-    /* ── Text input (API key) ── */
+    /* ── Text input ── */
     [data-testid="stTextInput"] input {
-        background: #05080f !important;
+        background: var(--bg-card) !important;
         border: 1px solid var(--border) !important;
-        color: var(--green) !important;
+        color: var(--white) !important;
         font-family: var(--font) !important;
-        border-radius: 2px !important;
-        caret-color: var(--green);
+        border-radius: 10px !important;
+        transition: border-color 0.2s, box-shadow 0.2s;
     }
     [data-testid="stTextInput"] input:focus {
-        border-color: var(--green) !important;
-        box-shadow: var(--green-glow) !important;
+        border-color: rgba(255,255,255,0.28) !important;
+        box-shadow: 0 0 0 3px rgba(255,255,255,0.06) !important;
         outline: none !important;
     }
-    [data-testid="stTextInput"] input::placeholder { color: var(--text-dim) !important; }
+    [data-testid="stTextInput"] input::placeholder { color: var(--gray-600) !important; }
 
     /* ── File uploader ── */
     [data-testid="stFileUploader"] {
-        background: rgba(0,255,65,0.02) !important;
-        border: 1px dashed rgba(0,255,65,0.28) !important;
-        border-radius: 4px !important;
+        background: var(--bg-card) !important;
+        border: 1px dashed rgba(255,255,255,0.12) !important;
+        border-radius: 14px !important;
         transition: border-color 0.25s, box-shadow 0.25s;
     }
     [data-testid="stFileUploader"]:hover {
-        border-color: var(--green) !important;
-        box-shadow: var(--green-glow) !important;
+        border-color: rgba(255,255,255,0.28) !important;
+        box-shadow: 0 0 0 4px rgba(255,255,255,0.04) !important;
     }
 
-    /* ── Primary button ── */
+    /* ── Primary button — white filled ── */
     .stButton > button[kind="primary"] {
-        background: transparent !important;
-        border: 1px solid var(--green) !important;
-        color: var(--green) !important;
+        background: var(--white) !important;
+        color: #000000 !important;
+        border: none !important;
+        border-radius: 10px !important;
         font-family: var(--font) !important;
         font-weight: 600 !important;
-        font-size: 0.82rem !important;
-        letter-spacing: 0.12em !important;
-        text-transform: uppercase !important;
-        border-radius: 2px !important;
-        transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
+        font-size: 0.88rem !important;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.5);
+        transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
     }
     .stButton > button[kind="primary"]:hover:not(:disabled) {
-        background: var(--green-dim) !important;
-        box-shadow: var(--green-glow) !important;
+        opacity: 0.88 !important;
         transform: translateY(-1px) !important;
+        box-shadow: 0 6px 20px rgba(255,255,255,0.14) !important;
     }
     .stButton > button[kind="primary"]:disabled {
-        border-color: var(--text-dim) !important;
-        color: var(--text-dim) !important;
-        opacity: 0.5 !important;
+        background: var(--gray-800) !important;
+        color: var(--gray-600) !important;
+        box-shadow: none !important;
     }
 
-    /* ── Download button ── */
+    /* ── Download button — outline ── */
     .stDownloadButton > button {
         background: transparent !important;
-        border: 1px solid rgba(0,229,255,0.45) !important;
-        color: var(--cyan) !important;
+        border: 1px solid var(--border-hi) !important;
+        color: var(--white) !important;
+        border-radius: 10px !important;
         font-family: var(--font) !important;
-        font-size: 0.8rem !important;
-        letter-spacing: 0.08em !important;
-        border-radius: 2px !important;
-        transition: background 0.2s, box-shadow 0.2s;
+        font-weight: 500 !important;
+        font-size: 0.88rem !important;
+        transition: background 0.2s, border-color 0.2s, transform 0.15s;
     }
     .stDownloadButton > button:hover {
-        background: var(--cyan-dim) !important;
-        box-shadow: var(--cyan-glow) !important;
+        background: rgba(255,255,255,0.06) !important;
+        border-color: rgba(255,255,255,0.3) !important;
+        transform: translateY(-1px) !important;
     }
 
     /* ── Tabs ── */
@@ -189,287 +194,240 @@ st.markdown(
     }
     [data-baseweb="tab"] {
         background: transparent !important;
-        color: var(--text-dim) !important;
+        color: var(--gray-600) !important;
         font-family: var(--font) !important;
-        font-size: 0.77rem !important;
-        letter-spacing: 0.06em !important;
+        font-size: 0.82rem !important;
+        font-weight: 500 !important;
         border-bottom: 2px solid transparent !important;
-        padding: 0.5rem 1.1rem !important;
+        padding: 0.6rem 1.2rem !important;
         transition: color 0.2s, border-color 0.2s !important;
     }
-    [data-baseweb="tab"]:hover { color: var(--green) !important; }
+    [data-baseweb="tab"]:hover { color: var(--gray-400) !important; }
     [aria-selected="true"][data-baseweb="tab"] {
-        color: var(--green) !important;
-        border-bottom-color: var(--green) !important;
-        text-shadow: 0 0 8px rgba(0,255,65,0.6);
+        color: var(--white) !important;
+        border-bottom-color: var(--white) !important;
     }
 
     /* ── Metrics ── */
     [data-testid="stMetric"] {
         background: var(--bg-card) !important;
         border: 1px solid var(--border) !important;
-        border-radius: 3px !important;
-        padding: 0.7rem 1rem !important;
+        border-radius: 12px !important;
+        padding: 1rem 1.2rem !important;
     }
     [data-testid="stMetricLabel"] p {
-        color: var(--text-dim) !important;
+        color: var(--gray-600) !important;
         font-size: 0.68rem !important;
-        letter-spacing: 0.14em !important;
+        letter-spacing: 0.1em !important;
         text-transform: uppercase !important;
+        font-weight: 500 !important;
     }
     [data-testid="stMetricValue"] {
-        color: var(--green) !important;
-        font-size: 0.95rem !important;
+        color: var(--white) !important;
+        font-size: 1rem !important;
+        font-weight: 600 !important;
     }
 
     /* ── Headings ── */
-    h1, h2, h3 { font-family: var(--font) !important; }
-    h2 {
-        color: var(--cyan) !important;
-        margin-top: 2rem;
-        border-bottom: 1px solid var(--border);
-        padding-bottom: 0.4rem;
-        letter-spacing: 0.06em;
+    h1, h2, h3 {
+        font-family: var(--font) !important;
+        color: var(--white) !important;
+        font-weight: 600 !important;
     }
-    h3 { color: var(--cyan) !important; letter-spacing: 0.04em; }
+    h2 {
+        font-size: 1.05rem !important;
+        margin-top: 2rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid var(--border);
+        letter-spacing: -0.01em;
+    }
 
-    /* ── Expander ── */
+    /* ── Expander (Palmer accordion style) ── */
     [data-testid="stExpander"] {
         background: var(--bg-card) !important;
         border: 1px solid var(--border) !important;
-        border-radius: 3px !important;
+        border-radius: 12px !important;
+        overflow: hidden;
+        margin-bottom: 0.4rem !important;
     }
-    [data-testid="stExpander"] summary p { color: var(--cyan) !important; }
+    [data-testid="stExpander"] summary {
+        color: var(--white) !important;
+        font-family: var(--font) !important;
+        font-weight: 500 !important;
+        padding: 0.9rem 1.1rem !important;
+    }
+    [data-testid="stExpander"] summary:hover {
+        background: rgba(255,255,255,0.04) !important;
+    }
 
     /* ── Inline code ── */
     code {
-        background: rgba(0,255,65,0.07) !important;
-        color: var(--green) !important;
-        border: 1px solid rgba(0,255,65,0.18) !important;
-        border-radius: 2px !important;
+        background: rgba(255,255,255,0.08) !important;
+        color: var(--gray-200) !important;
+        border: 1px solid var(--border) !important;
+        border-radius: 6px !important;
         padding: 0.1rem 0.35rem !important;
-        font-family: var(--font) !important;
+        font-size: 0.85em !important;
     }
 
-    /* ── HR ── */
+    /* ── HR & Caption ── */
     hr { border-color: var(--border) !important; }
-
-    /* ── Caption ── */
     [data-testid="stCaptionContainer"] p, .stCaption {
-        color: var(--text-dim) !important;
-        font-family: var(--font) !important;
-        font-size: 0.72rem !important;
+        color: var(--gray-600) !important;
+        font-size: 0.75rem !important;
     }
 
     /* ── Scrollbar ── */
-    ::-webkit-scrollbar { width: 5px; }
-    ::-webkit-scrollbar-track { background: var(--bg); }
-    ::-webkit-scrollbar-thumb { background: rgba(0,255,65,0.2); border-radius: 3px; }
-    ::-webkit-scrollbar-thumb:hover { background: rgba(0,255,65,0.4); }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
 
     /* ── Hero ── */
-    .hero-wrap {
-        padding: 1.2rem 0 1.4rem 0;
-        border-bottom: 1px solid var(--border);
-        margin-bottom: 1.5rem;
+    .palmer-hero {
+        padding: 1.8rem 0 2rem 0;
+        margin-bottom: 0.5rem;
     }
-    .terminal-prompt {
-        font-size: 0.76rem;
-        color: var(--text-dim);
-        line-height: 1.7;
-        margin-bottom: 0.9rem;
-        animation: fadeInUp 0.4s ease-out both;
+    .hero-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.11);
+        border-radius: 100px;
+        padding: 0.3rem 1rem;
+        font-size: 0.78rem;
+        color: var(--gray-400);
+        font-family: var(--font);
+        margin-bottom: 1.6rem;
+        animation: fadeUp 0.4s ease-out both;
     }
-    .prompt-symbol { color: var(--green); }
-    .prompt-path   { color: var(--cyan); }
-    .prompt-flag   { color: #ffaa00; }
-
-    @keyframes glitch {
-        0%,89%,100% {
-            text-shadow: 0 0 18px rgba(0,255,65,0.45), 0 0 36px rgba(0,255,65,0.15);
-            transform: translate(0,0);
-            filter: none;
-        }
-        90% {
-            text-shadow: -3px 0 rgba(255,0,80,0.9), 3px 0 rgba(0,229,255,0.9);
-            transform: translate(2px,0);
-            filter: brightness(1.2);
-        }
-        92% {
-            text-shadow: 3px 0 rgba(255,0,80,0.9), -3px 0 rgba(0,229,255,0.9);
-            transform: translate(-2px,0);
-        }
-        94% {
-            text-shadow: 0 0 18px rgba(0,255,65,0.45);
-            transform: translate(0,0);
-        }
-    }
-    .main-title {
-        font-size: 2.7rem;
+    .pill-dot { color: var(--white); font-size: 0.55rem; }
+    .palmer-title {
+        font-size: 3.4rem;
         font-weight: 700;
-        color: #e8f5e9;
-        letter-spacing: 0.06em;
-        line-height: 1.1;
-        animation: glitch 7s ease-in-out 1s infinite, fadeInUp 0.5s ease-out 0.1s both;
+        color: var(--white);
+        line-height: 1.08;
+        letter-spacing: -0.03em;
+        margin: 0 0 1.2rem 0;
+        animation: fadeUp 0.5s ease-out 0.1s both;
     }
-    .hero-subtitle {
-        font-size: 0.95rem;
-        color: var(--text);
-        margin-top: 0.6rem;
-        animation: fadeInUp 0.5s ease-out 0.25s both;
+    .title-dim { color: rgba(255,255,255,0.38); }
+    .palmer-subtitle {
+        font-size: 1rem;
+        color: var(--gray-400);
+        max-width: 540px;
+        line-height: 1.7;
+        margin-bottom: 0.8rem;
+        animation: fadeUp 0.5s ease-out 0.2s both;
     }
-    .hero-tagline {
-        font-size: 0.72rem;
-        color: var(--green);
-        letter-spacing: 0.18em;
-        margin-top: 0.5rem;
-        animation: fadeInUp 0.5s ease-out 0.4s both;
+    .palmer-meta {
+        font-size: 0.74rem;
+        color: var(--gray-600);
+        letter-spacing: 0.03em;
+        animation: fadeUp 0.5s ease-out 0.3s both;
     }
-    .cursor {
-        display: inline-block;
-        width: 9px; height: 1em;
-        background: var(--green);
-        vertical-align: text-bottom;
-        margin-left: 2px;
-        box-shadow: 0 0 6px var(--green);
-        animation: blink 1s step-end infinite;
-    }
-    @keyframes blink { 50% { opacity: 0; } }
 
-    /* ── Risk badges ── */
+    /* ── Risk badges (pill shape) ── */
     .risk-badge {
         display: inline-block;
-        padding: 0.28rem 0.85rem;
-        border-radius: 2px;
-        font-weight: 700;
-        font-size: 0.75rem;
-        letter-spacing: 0.14em;
+        padding: 0.22rem 0.8rem;
+        border-radius: 100px;
+        font-weight: 600;
+        font-size: 0.72rem;
+        letter-spacing: 0.05em;
         text-transform: uppercase;
         font-family: var(--font);
         border: 1px solid;
-        transition: box-shadow 0.2s;
+        transition: box-shadow 0.25s;
     }
-    .risk-Low      { color: #39ff14; border-color: #39ff14; background: rgba(57,255,20,0.07); }
-    .risk-Medium   { color: #ffaa00; border-color: #ffaa00; background: rgba(255,170,0,0.07); }
-    .risk-High     { color: #ff6600; border-color: #ff6600; background: rgba(255,102,0,0.07); }
-    .risk-Critical { color: #ff3333; border-color: #ff3333; background: rgba(255,51,51,0.07); }
+    .risk-Low      { color: #4ade80; border-color: rgba(74,222,128,0.35);  background: rgba(74,222,128,0.08); }
+    .risk-Medium   { color: #fbbf24; border-color: rgba(251,191,36,0.35);  background: rgba(251,191,36,0.08); }
+    .risk-High     { color: #fb923c; border-color: rgba(251,146,60,0.35);  background: rgba(251,146,60,0.08); }
+    .risk-Critical { color: #f87171; border-color: rgba(248,113,113,0.35); background: rgba(248,113,113,0.08); }
 
     @keyframes critPulse {
-        0%,100% { box-shadow: 0 0 5px rgba(255,51,51,0.45), 0 0 14px rgba(255,51,51,0.2); }
-        50%      { box-shadow: 0 0 12px rgba(255,51,51,0.8), 0 0 28px rgba(255,51,51,0.4); }
+        0%,100% { box-shadow: 0 0 0 0 rgba(248,113,113,0.3); }
+        50%      { box-shadow: 0 0 0 5px rgba(248,113,113,0); }
     }
     @keyframes highPulse {
-        0%,100% { box-shadow: 0 0 5px rgba(255,102,0,0.4); }
-        50%      { box-shadow: 0 0 12px rgba(255,102,0,0.75), 0 0 24px rgba(255,102,0,0.3); }
+        0%,100% { box-shadow: 0 0 0 0 rgba(251,146,60,0.25); }
+        50%      { box-shadow: 0 0 0 4px rgba(251,146,60,0); }
     }
-    .risk-Critical { animation: critPulse 2s ease-in-out infinite; }
-    .risk-High     { animation: highPulse 2.3s ease-in-out infinite; }
+    .risk-Critical { animation: critPulse 2.2s ease-in-out infinite; }
+    .risk-High     { animation: highPulse 2.5s ease-in-out infinite; }
 
-    /* ── Finding cards ── */
+    /* ── Finding cards (Palmer dark card style) ── */
     .finding-card {
-        background: rgba(0,255,65,0.018);
-        border: 1px solid rgba(0,255,65,0.1);
-        border-left: 3px solid rgba(0,255,65,0.3);
-        padding: 0.85rem 1rem;
-        margin: 0.5rem 0;
-        border-radius: 2px;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-left: 3px solid rgba(255,255,255,0.1);
+        padding: 1rem 1.2rem;
+        margin: 0.55rem 0;
+        border-radius: 14px;
+        color: var(--gray-400);
         font-family: var(--font);
-        color: var(--text);
-        transition: transform 0.18s, box-shadow 0.18s, background 0.18s;
+        transition: background 0.2s, transform 0.18s, box-shadow 0.2s;
     }
     .finding-card:hover {
-        transform: translateX(5px);
-        background: rgba(0,255,65,0.035);
+        background: var(--bg-card-2);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     }
     .finding-card.severity-Critical {
-        border-left-color: #ff3333;
-        border-color: rgba(255,51,51,0.18);
-        background: rgba(255,51,51,0.025);
+        border-left-color: #ef4444;
+        border-color: rgba(239,68,68,0.14);
     }
-    .finding-card.severity-Critical:hover { box-shadow: 0 0 14px rgba(255,51,51,0.22); }
+    .finding-card.severity-Critical:hover { box-shadow: 0 10px 30px rgba(239,68,68,0.1); }
     .finding-card.severity-High {
-        border-left-color: #ff6600;
-        border-color: rgba(255,102,0,0.18);
-        background: rgba(255,102,0,0.025);
+        border-left-color: #f97316;
+        border-color: rgba(249,115,22,0.14);
     }
-    .finding-card.severity-High:hover { box-shadow: 0 0 14px rgba(255,102,0,0.22); }
+    .finding-card.severity-High:hover { box-shadow: 0 10px 30px rgba(249,115,22,0.1); }
     .finding-card.severity-Medium {
-        border-left-color: #ffaa00;
-        border-color: rgba(255,170,0,0.18);
-        background: rgba(255,170,0,0.02);
+        border-left-color: #eab308;
+        border-color: rgba(234,179,8,0.12);
     }
     .finding-card.severity-Low {
-        border-left-color: #39ff14;
-        border-color: rgba(57,255,20,0.18);
-        background: rgba(57,255,20,0.015);
+        border-left-color: #22c55e;
+        border-color: rgba(34,197,94,0.12);
     }
 
     /* ── Empty state ── */
     .empty-state {
         text-align: center;
-        padding: 2rem;
-        color: var(--text-dim);
+        padding: 2.5rem;
+        color: var(--gray-600);
         background: var(--bg-card);
-        border-radius: 2px;
-        border: 1px dashed rgba(0,255,65,0.2);
+        border-radius: 14px;
+        border: 1px dashed rgba(255,255,255,0.08);
         font-family: var(--font);
         transition: border-color 0.2s;
     }
-    .empty-state:hover { border-color: rgba(0,255,65,0.45); }
+    .empty-state:hover { border-color: rgba(255,255,255,0.16); }
 
     /* ── Animations ── */
-    @keyframes fadeInUp {
-        from { opacity: 0; transform: translateY(14px); }
+    @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(12px); }
         to   { opacity: 1; transform: translateY(0); }
     }
-    @keyframes sidebarFade {
+    @keyframes slideLeft {
         from { opacity: 0; transform: translateX(-8px); }
         to   { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes driftA {
+        0%   { transform: translate(0,0) scale(1); }
+        100% { transform: translate(-80px, 100px) scale(1.12); }
+    }
+    @keyframes driftB {
+        0%   { transform: translate(0,0) scale(1.05); }
+        100% { transform: translate(100px, -70px) scale(0.92); }
     }
 
     /* ── Hide Streamlit chrome ── */
     #MainMenu { visibility: hidden; }
     footer    { visibility: hidden; }
     </style>
-
-    <script>
-    /* Matrix rain canvas — injected once, persists across Streamlit rerenders */
-    (function () {
-        if (document.getElementById('matrix-bg')) return;
-        const c = document.createElement('canvas');
-        c.id = 'matrix-bg';
-        c.style.cssText = [
-            'position:fixed', 'top:0', 'left:0',
-            'width:100vw', 'height:100vh',
-            'z-index:0', 'pointer-events:none', 'opacity:0.055'
-        ].join(';');
-        document.body.prepend(c);
-        const ctx = c.getContext('2d');
-        const resize = () => { c.width = innerWidth; c.height = innerHeight; };
-        resize();
-        window.addEventListener('resize', resize);
-        const CHARS = '01アイウカキクコサシスABCDEFGHIJKLM{}[]<>/\\|_=+';
-        const FS = 13;
-        let cols, drops;
-        const init = () => {
-            cols = Math.floor(c.width / FS);
-            drops = Array.from({length: cols}, () => Math.random() * -(c.height / FS));
-        };
-        init();
-        window.addEventListener('resize', init);
-        setInterval(() => {
-            ctx.fillStyle = 'rgba(10,14,26,0.055)';
-            ctx.fillRect(0, 0, c.width, c.height);
-            ctx.font = FS + 'px monospace';
-            drops.forEach((y, i) => {
-                ctx.fillStyle = Math.random() > 0.97 ? '#e8f5e9' : '#00ff41';
-                ctx.fillText(CHARS[Math.floor(Math.random() * CHARS.length)], i * FS, y * FS);
-                if (y * FS > c.height && Math.random() > 0.975) drops[i] = 0;
-                drops[i] += 0.6;
-            });
-        }, 55);
-    })();
-    </script>
     """,
     unsafe_allow_html=True,
 )
@@ -525,14 +483,11 @@ with st.sidebar:
 
 st.markdown(
     """
-    <div class="hero-wrap">
-        <div class="terminal-prompt">
-            <span class="prompt-symbol">┌──(</span><span class="prompt-path">kaps@soc2-analyzer</span><span class="prompt-symbol">)-[</span><span class="prompt-flag">~/vendor-risk</span><span class="prompt-symbol">]</span><br>
-            <span class="prompt-symbol">└─$</span> <span class="prompt-flag">soc2-analyzer</span> <span class="prompt-path">--mode</span> analyze <span class="prompt-path">--output</span> structured-json<span class="cursor"> </span>
-        </div>
-        <div class="main-title">🛡️ SOC 2 ANALYZER</div>
-        <div class="hero-subtitle">Drop a vendor SOC 2 Type II PDF · Get a structured risk assessment in 30 seconds.</div>
-        <div class="hero-tagline">[ FREE &nbsp;·&nbsp; BYOK &nbsp;·&nbsp; ZERO DATA RETENTION &nbsp;·&nbsp; OPEN SOURCE ]</div>
+    <div class="palmer-hero">
+        <div class="hero-pill"><span class="pill-dot">●</span> Vendor Risk Intelligence</div>
+        <div class="palmer-title">SOC 2 Reports.<br><span class="title-dim">Analyzed in 30 seconds.</span></div>
+        <div class="palmer-subtitle">Upload any vendor's SOC 2 Type II PDF and get a structured risk assessment — exceptions, red flags, CUECs, and recommended follow-up questions.</div>
+        <div class="palmer-meta">Free &nbsp;·&nbsp; Bring your own API key &nbsp;·&nbsp; Zero data retention &nbsp;·&nbsp; Open source</div>
     </div>
     """,
     unsafe_allow_html=True,
