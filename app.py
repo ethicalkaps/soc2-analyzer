@@ -494,7 +494,7 @@ with st.sidebar:
         st.info(
             "**Don't have a key?**  \n"
             "Get one free at [console.anthropic.com](https://console.anthropic.com) — "
-            "new accounts get $5 in credit (~70 reports on Haiku)."
+            "pay-as-you-go — a typical analysis costs ~$0.07 on Haiku or ~$0.21 on Sonnet."
         )
 
     st.markdown("### 🧠 Model")
@@ -807,7 +807,7 @@ elif uploaded_file is None:
         """
         <div class="empty-state">
         <strong>How it works</strong><br/>
-        1. Paste your Anthropic API key in the sidebar (free $5 credit on signup)<br/>
+        1. Paste your Anthropic API key in the sidebar (~$0.07 per report on Haiku)<br/>
         2. Upload a vendor's SOC 2 Type II PDF<br/>
         3. Get a structured risk assessment with red flags, exceptions, CUECs, and follow-up questions
         </div>

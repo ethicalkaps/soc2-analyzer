@@ -18,7 +18,7 @@ This tool does that in 30 seconds using Claude. Drop in a SOC 2 PDF, get a struc
 
 ## Why it's different
 
-- **Free forever.** Bring your own Anthropic API key — new accounts get $5 credit (~70 reports on Haiku).
+- **Free forever.** Bring your own Anthropic API key — pay-as-you-go, ~$0.07 per report on Haiku 4.5 or ~$0.21 on Sonnet 4.6.
 - **Privacy-first.** Your PDF is processed in memory, never stored. No logging, no analytics, no database. Self-host the source if you don't trust hosted tools with vendor data.
 - **Built by a GRC practitioner.** Not a SaaS pitch. The prompt was designed by someone who reads these reports.
 
@@ -26,7 +26,7 @@ This tool does that in 30 seconds using Claude. Drop in a SOC 2 PDF, get a struc
 
 → **[soc2-analyzer-ethicalkaps.streamlit.app](https://soc2-analyzer-ethicalkaps.streamlit.app)**
 
-You'll need an Anthropic API key. Get one free at [console.anthropic.com](https://console.anthropic.com) — new accounts come with $5 in credit, enough for ~70 SOC 2 analyses on Haiku 4.5.
+You'll need an Anthropic API key — get one at [console.anthropic.com](https://console.anthropic.com). Usage is pay-as-you-go: a typical SOC 2 analysis costs ~$0.07 on Haiku 4.5 or ~$0.21 on Sonnet 4.6.
 
 ## What you get
 
