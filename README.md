@@ -2,7 +2,7 @@
 
 **A free, open-source tool that turns a 100-page SOC 2 report into a 1-page risk assessment in 30 seconds.**
 
-[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://soc2-analyzer.streamlit.app)
+[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://soc2-analyzer-ethicalkaps.streamlit.app)
 
 ---
 
@@ -24,7 +24,7 @@ This tool does that in 30 seconds using Claude. Drop in a SOC 2 PDF, get a struc
 
 ## Try it now
 
-→ **[soc2-analyzer.streamlit.app](https://soc2-analyzer.streamlit.app)**
+→ **[soc2-analyzer-ethicalkaps.streamlit.app](https://soc2-analyzer-ethicalkaps.streamlit.app)**
 
 You'll need an Anthropic API key. Get one free at [console.anthropic.com](https://console.anthropic.com) — new accounts come with $5 in credit, enough for ~70 SOC 2 analyses on Haiku 4.5.
 
@@ -101,6 +101,6 @@ MIT — do whatever you want.
 
 ## Built by
 
-[Kaps](https://github.com/ethicalkaps) — NOC Engineer pivoting to GRC. Run a YouTube channel called [Rapid Grasper](https://youtube.com/@rapidgrasper) where I cover cybersecurity and GRC topics.
+[Kaps](https://www.linkedin.com/in/kapil-chaudhary-cyber-security/) — NOC Engineer pivoting to GRC. Run a YouTube channel called [Rapid Grasper](https://youtube.com/@rapidgrasper) where I cover cybersecurity and GRC topics.
 
 If this tool saved you time, the best thanks is to share it with another GRC analyst or drop a star on the repo. ⭐

@@ -246,7 +246,7 @@ with st.sidebar:
 
     st.markdown("---")
     st.caption(
-        "Built by [Kaps](https://github.com/ethicalkaps) · "
+        "Built by [Kaps](https://www.linkedin.com/in/kapil-chaudhary-cyber-security/) · "
         "[Rapid Grasper](https://youtube.com/@rapidgrasper)"
     )
 
