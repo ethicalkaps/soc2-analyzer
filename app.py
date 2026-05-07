@@ -486,15 +486,15 @@ with st.sidebar:
     api_key = st.text_input(
         "Anthropic API Key",
         type="password",
-        placeholder="sk-ant-...",
+        placeholder="Paste your API key...",
         help="Your key is held in browser memory only. Never stored, never logged.",
     )
 
     if not api_key:
         st.info(
             "**Don't have a key?**  \n"
-            "Get one free at [console.anthropic.com](https://console.anthropic.com) — "
-            "pay-as-you-go — a typical analysis costs ~$0.07 on Haiku or ~$0.21 on Sonnet."
+            "Get one at [console.anthropic.com](https://console.anthropic.com) — "
+            "pay-as-you-go. Typical cost: ~\\$0.07 per report on Haiku, ~\\$0.21 on Sonnet."
         )
 
     st.markdown("### 🧠 Model")
@@ -592,11 +592,9 @@ if uploaded_file is not None:
         )
 
     # Analyze button
-    analyze_disabled = not api_key or not api_key.startswith("sk-ant-")
-    if analyze_disabled and not api_key:
+    analyze_disabled = not api_key
+    if analyze_disabled:
         st.info("👈 Add your Anthropic API key in the sidebar to analyze.")
-    elif analyze_disabled:
-        st.warning("API key should start with `sk-ant-`. Double-check it's the right key.")
 
     if st.button("🔍 Analyze Report", type="primary", disabled=analyze_disabled, use_container_width=False):
         with st.spinner(f"Claude {selected_model.display_name} is analyzing the report..."):
@@ -807,7 +805,7 @@ elif uploaded_file is None:
         """
         <div class="empty-state">
         <strong>How it works</strong><br/>
-        1. Paste your Anthropic API key in the sidebar (~$0.07 per report on Haiku)<br/>
+        1. Paste your Anthropic API key in the sidebar (~\\$0.07 per report on Haiku)<br/>
         2. Upload a vendor's SOC 2 Type II PDF<br/>
         3. Get a structured risk assessment with red flags, exceptions, CUECs, and follow-up questions
         </div>
