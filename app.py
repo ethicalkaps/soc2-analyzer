@@ -431,8 +431,10 @@ st.markdown(
         100% { transform: translate(100px, -70px) scale(0.92); }
     }
 
-    /* ── Custom cursor — hide native ── */
-    * { cursor: none !important; }
+    /* ── Custom cursor — white dot via SVG data URL (CSS-only, survives rerenders) ── */
+    * {
+        cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Ccircle cx='8' cy='8' r='6' fill='white' fill-opacity='0.95'/%3E%3C/svg%3E") 8 8, auto !important;
+    }
 
     /* ── Hide Streamlit chrome ── */
     #MainMenu { visibility: hidden; }
@@ -440,58 +442,36 @@ st.markdown(
     </style>
 
     <script>
+    /* Mouse spotlight glow — follows cursor, survives rerenders via interval check */
     (function () {
-        /* ── White dot cursor ── */
-        const dot = document.createElement('div');
-        dot.id = 'cur-dot';
-        dot.style.cssText = [
-            'position:fixed',
-            'width:12px', 'height:12px',
-            'background:#ffffff',
-            'border-radius:50%',
-            'pointer-events:none',
-            'z-index:999999',
-            'transform:translate(-50%,-50%)',
-            'box-shadow:0 0 12px rgba(255,255,255,0.7),0 0 24px rgba(255,255,255,0.25)',
-            'transition:opacity 0.25s',
-            'will-change:left,top',
-            'left:-100px', 'top:-100px'
-        ].join(';');
-        document.body.appendChild(dot);
+        function initGlow() {
+            if (document.getElementById('cur-glow')) return;
+            const glow = document.createElement('div');
+            glow.id = 'cur-glow';
+            glow.style.cssText = [
+                'position:fixed',
+                'width:500px', 'height:500px',
+                'border-radius:50%',
+                'pointer-events:none',
+                'z-index:0',
+                'transform:translate(-50%,-50%)',
+                'background:radial-gradient(circle,rgba(255,255,255,0.044) 0%,transparent 65%)',
+                'filter:blur(30px)',
+                'transition:left 0.13s ease-out,top 0.13s ease-out,opacity 0.3s',
+                'will-change:left,top',
+                'left:-600px', 'top:-600px'
+            ].join(';');
+            document.body.appendChild(glow);
 
-        /* ── Mouse spotlight — large soft glow following cursor ── */
-        const glow = document.createElement('div');
-        glow.id = 'cur-glow';
-        glow.style.cssText = [
-            'position:fixed',
-            'width:480px', 'height:480px',
-            'border-radius:50%',
-            'pointer-events:none',
-            'z-index:0',
-            'transform:translate(-50%,-50%)',
-            'background:radial-gradient(circle,rgba(255,255,255,0.042) 0%,transparent 65%)',
-            'filter:blur(28px)',
-            'transition:left 0.14s ease-out,top 0.14s ease-out,opacity 0.3s',
-            'will-change:left,top',
-            'left:-500px', 'top:-500px'
-        ].join(';');
-        document.body.appendChild(glow);
-
-        document.addEventListener('mousemove', (e) => {
-            dot.style.left  = e.clientX + 'px';
-            dot.style.top   = e.clientY + 'px';
-            glow.style.left = e.clientX + 'px';
-            glow.style.top  = e.clientY + 'px';
-        });
-
-        document.addEventListener('mouseleave', () => {
-            dot.style.opacity  = '0';
-            glow.style.opacity = '0';
-        });
-        document.addEventListener('mouseenter', () => {
-            dot.style.opacity  = '1';
-            glow.style.opacity = '1';
-        });
+            document.addEventListener('mousemove', (e) => {
+                glow.style.left = e.clientX + 'px';
+                glow.style.top  = e.clientY + 'px';
+            });
+            document.addEventListener('mouseleave', () => { glow.style.opacity = '0'; });
+            document.addEventListener('mouseenter', () => { glow.style.opacity = '1'; });
+        }
+        initGlow();
+        setInterval(initGlow, 2000);
     })();
     </script>
     """,
