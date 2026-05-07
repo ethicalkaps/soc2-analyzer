@@ -139,11 +139,18 @@ st.markdown(
         background: var(--bg-card) !important;
         border: 1px dashed rgba(255,255,255,0.12) !important;
         border-radius: 14px !important;
+        padding: 0.85rem 1.1rem !important;
         transition: border-color 0.25s, box-shadow 0.25s;
     }
     [data-testid="stFileUploader"]:hover {
         border-color: rgba(255,255,255,0.28) !important;
         box-shadow: 0 0 0 4px rgba(255,255,255,0.04) !important;
+    }
+    [data-testid="stFileUploader"] label {
+        color: var(--gray-400) !important;
+        font-size: 0.85rem !important;
+        margin-bottom: 0.6rem !important;
+        display: block !important;
     }
 
     /* ── Primary button — white filled ── */
@@ -424,10 +431,69 @@ st.markdown(
         100% { transform: translate(100px, -70px) scale(0.92); }
     }
 
+    /* ── Custom cursor — hide native ── */
+    * { cursor: none !important; }
+
     /* ── Hide Streamlit chrome ── */
     #MainMenu { visibility: hidden; }
     footer    { visibility: hidden; }
     </style>
+
+    <script>
+    (function () {
+        /* ── White dot cursor ── */
+        const dot = document.createElement('div');
+        dot.id = 'cur-dot';
+        dot.style.cssText = [
+            'position:fixed',
+            'width:12px', 'height:12px',
+            'background:#ffffff',
+            'border-radius:50%',
+            'pointer-events:none',
+            'z-index:999999',
+            'transform:translate(-50%,-50%)',
+            'box-shadow:0 0 12px rgba(255,255,255,0.7),0 0 24px rgba(255,255,255,0.25)',
+            'transition:opacity 0.25s',
+            'will-change:left,top',
+            'left:-100px', 'top:-100px'
+        ].join(';');
+        document.body.appendChild(dot);
+
+        /* ── Mouse spotlight — large soft glow following cursor ── */
+        const glow = document.createElement('div');
+        glow.id = 'cur-glow';
+        glow.style.cssText = [
+            'position:fixed',
+            'width:480px', 'height:480px',
+            'border-radius:50%',
+            'pointer-events:none',
+            'z-index:0',
+            'transform:translate(-50%,-50%)',
+            'background:radial-gradient(circle,rgba(255,255,255,0.042) 0%,transparent 65%)',
+            'filter:blur(28px)',
+            'transition:left 0.14s ease-out,top 0.14s ease-out,opacity 0.3s',
+            'will-change:left,top',
+            'left:-500px', 'top:-500px'
+        ].join(';');
+        document.body.appendChild(glow);
+
+        document.addEventListener('mousemove', (e) => {
+            dot.style.left  = e.clientX + 'px';
+            dot.style.top   = e.clientY + 'px';
+            glow.style.left = e.clientX + 'px';
+            glow.style.top  = e.clientY + 'px';
+        });
+
+        document.addEventListener('mouseleave', () => {
+            dot.style.opacity  = '0';
+            glow.style.opacity = '0';
+        });
+        document.addEventListener('mouseenter', () => {
+            dot.style.opacity  = '1';
+            glow.style.opacity = '1';
+        });
+    })();
+    </script>
     """,
     unsafe_allow_html=True,
 )
