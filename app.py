@@ -35,171 +35,441 @@ st.set_page_config(
     },
 )
 
-# ----- Custom CSS + Animations -----
+# ----- Cybersecurity Theme: CSS + Matrix Rain -----
 
 st.markdown(
     """
     <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap');
+
+    /* ── Design tokens ── */
+    :root {
+        --green:       #00ff41;
+        --green-dim:   rgba(0,255,65,0.12);
+        --green-glow:  0 0 8px rgba(0,255,65,0.5), 0 0 20px rgba(0,255,65,0.2);
+        --cyan:        #00e5ff;
+        --cyan-dim:    rgba(0,229,255,0.12);
+        --cyan-glow:   0 0 8px rgba(0,229,255,0.5), 0 0 20px rgba(0,229,255,0.2);
+        --red:         #ff3333;
+        --orange:      #ff6600;
+        --yellow:      #ffaa00;
+        --bg:          #0a0e1a;
+        --bg-card:     #0d1117;
+        --bg-sidebar:  #080c14;
+        --border:      rgba(0,255,65,0.14);
+        --text:        #b0bec5;
+        --text-dim:    #4a5568;
+        --font:        'JetBrains Mono', 'Courier New', monospace;
+    }
+
+    /* ── Base ── */
+    .stApp, body {
+        background-color: var(--bg) !important;
+        font-family: var(--font) !important;
+        color: var(--text) !important;
+    }
+
+    /* ── Subtle scanlines overlay ── */
+    .stApp::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background: repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 3px,
+            rgba(0,255,65,0.013) 3px,
+            rgba(0,255,65,0.013) 4px
+        );
+        pointer-events: none;
+        z-index: 9998;
+    }
+
     /* ── Layout ── */
     .block-container {
         padding-top: 2rem;
         padding-bottom: 3rem;
         max-width: 1100px;
-    }
-
-    /* ── Page fade-in on load ── */
-    @keyframes fadeInUp {
-        from { opacity: 0; transform: translateY(18px); }
-        to   { opacity: 1; transform: translateY(0); }
-    }
-    .block-container {
         animation: fadeInUp 0.55s ease-out both;
     }
 
-    /* ── Animated gradient hero title ── */
-    @keyframes gradientShift {
-        0%   { background-position: 0% 50%; }
-        50%  { background-position: 100% 50%; }
-        100% { background-position: 0% 50%; }
+    /* ── Sidebar ── */
+    [data-testid="stSidebar"] {
+        background-color: var(--bg-sidebar) !important;
+        border-right: 1px solid var(--border) !important;
+        animation: sidebarFade 0.5s ease-out both;
     }
-    .gradient-title {
-        font-size: 2.6rem;
-        font-weight: 800;
-        background: linear-gradient(270deg, #6366f1, #0ea5e9, #10b981, #6366f1);
-        background-size: 300% 300%;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        animation: gradientShift 5s ease infinite;
+    [data-testid="stSidebar"]::before {
+        content: '';
+        display: block;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, var(--green), transparent);
         margin-bottom: 0.25rem;
     }
+    [data-testid="stSidebar"] h3 {
+        color: var(--green) !important;
+        font-size: 0.75rem !important;
+        letter-spacing: 0.18em !important;
+        text-transform: uppercase !important;
+    }
 
-    /* ── Subtitle slide-in ── */
-    @keyframes slideInLeft {
-        from { opacity: 0; transform: translateX(-16px); }
-        to   { opacity: 1; transform: translateX(0); }
+    /* ── Text input (API key) ── */
+    [data-testid="stTextInput"] input {
+        background: #05080f !important;
+        border: 1px solid var(--border) !important;
+        color: var(--green) !important;
+        font-family: var(--font) !important;
+        border-radius: 2px !important;
+        caret-color: var(--green);
+    }
+    [data-testid="stTextInput"] input:focus {
+        border-color: var(--green) !important;
+        box-shadow: var(--green-glow) !important;
+        outline: none !important;
+    }
+    [data-testid="stTextInput"] input::placeholder { color: var(--text-dim) !important; }
+
+    /* ── File uploader ── */
+    [data-testid="stFileUploader"] {
+        background: rgba(0,255,65,0.02) !important;
+        border: 1px dashed rgba(0,255,65,0.28) !important;
+        border-radius: 4px !important;
+        transition: border-color 0.25s, box-shadow 0.25s;
+    }
+    [data-testid="stFileUploader"]:hover {
+        border-color: var(--green) !important;
+        box-shadow: var(--green-glow) !important;
+    }
+
+    /* ── Primary button ── */
+    .stButton > button[kind="primary"] {
+        background: transparent !important;
+        border: 1px solid var(--green) !important;
+        color: var(--green) !important;
+        font-family: var(--font) !important;
+        font-weight: 600 !important;
+        font-size: 0.82rem !important;
+        letter-spacing: 0.12em !important;
+        text-transform: uppercase !important;
+        border-radius: 2px !important;
+        transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
+    }
+    .stButton > button[kind="primary"]:hover:not(:disabled) {
+        background: var(--green-dim) !important;
+        box-shadow: var(--green-glow) !important;
+        transform: translateY(-1px) !important;
+    }
+    .stButton > button[kind="primary"]:disabled {
+        border-color: var(--text-dim) !important;
+        color: var(--text-dim) !important;
+        opacity: 0.5 !important;
+    }
+
+    /* ── Download button ── */
+    .stDownloadButton > button {
+        background: transparent !important;
+        border: 1px solid rgba(0,229,255,0.45) !important;
+        color: var(--cyan) !important;
+        font-family: var(--font) !important;
+        font-size: 0.8rem !important;
+        letter-spacing: 0.08em !important;
+        border-radius: 2px !important;
+        transition: background 0.2s, box-shadow 0.2s;
+    }
+    .stDownloadButton > button:hover {
+        background: var(--cyan-dim) !important;
+        box-shadow: var(--cyan-glow) !important;
+    }
+
+    /* ── Tabs ── */
+    [data-baseweb="tab-list"] {
+        background: transparent !important;
+        border-bottom: 1px solid var(--border) !important;
+        gap: 0 !important;
+    }
+    [data-baseweb="tab"] {
+        background: transparent !important;
+        color: var(--text-dim) !important;
+        font-family: var(--font) !important;
+        font-size: 0.77rem !important;
+        letter-spacing: 0.06em !important;
+        border-bottom: 2px solid transparent !important;
+        padding: 0.5rem 1.1rem !important;
+        transition: color 0.2s, border-color 0.2s !important;
+    }
+    [data-baseweb="tab"]:hover { color: var(--green) !important; }
+    [aria-selected="true"][data-baseweb="tab"] {
+        color: var(--green) !important;
+        border-bottom-color: var(--green) !important;
+        text-shadow: 0 0 8px rgba(0,255,65,0.6);
+    }
+
+    /* ── Metrics ── */
+    [data-testid="stMetric"] {
+        background: var(--bg-card) !important;
+        border: 1px solid var(--border) !important;
+        border-radius: 3px !important;
+        padding: 0.7rem 1rem !important;
+    }
+    [data-testid="stMetricLabel"] p {
+        color: var(--text-dim) !important;
+        font-size: 0.68rem !important;
+        letter-spacing: 0.14em !important;
+        text-transform: uppercase !important;
+    }
+    [data-testid="stMetricValue"] {
+        color: var(--green) !important;
+        font-size: 0.95rem !important;
+    }
+
+    /* ── Headings ── */
+    h1, h2, h3 { font-family: var(--font) !important; }
+    h2 {
+        color: var(--cyan) !important;
+        margin-top: 2rem;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 0.4rem;
+        letter-spacing: 0.06em;
+    }
+    h3 { color: var(--cyan) !important; letter-spacing: 0.04em; }
+
+    /* ── Expander ── */
+    [data-testid="stExpander"] {
+        background: var(--bg-card) !important;
+        border: 1px solid var(--border) !important;
+        border-radius: 3px !important;
+    }
+    [data-testid="stExpander"] summary p { color: var(--cyan) !important; }
+
+    /* ── Inline code ── */
+    code {
+        background: rgba(0,255,65,0.07) !important;
+        color: var(--green) !important;
+        border: 1px solid rgba(0,255,65,0.18) !important;
+        border-radius: 2px !important;
+        padding: 0.1rem 0.35rem !important;
+        font-family: var(--font) !important;
+    }
+
+    /* ── HR ── */
+    hr { border-color: var(--border) !important; }
+
+    /* ── Caption ── */
+    [data-testid="stCaptionContainer"] p, .stCaption {
+        color: var(--text-dim) !important;
+        font-family: var(--font) !important;
+        font-size: 0.72rem !important;
+    }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: rgba(0,255,65,0.2); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(0,255,65,0.4); }
+
+    /* ── Hero ── */
+    .hero-wrap {
+        padding: 1.2rem 0 1.4rem 0;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 1.5rem;
+    }
+    .terminal-prompt {
+        font-size: 0.76rem;
+        color: var(--text-dim);
+        line-height: 1.7;
+        margin-bottom: 0.9rem;
+        animation: fadeInUp 0.4s ease-out both;
+    }
+    .prompt-symbol { color: var(--green); }
+    .prompt-path   { color: var(--cyan); }
+    .prompt-flag   { color: #ffaa00; }
+
+    @keyframes glitch {
+        0%,89%,100% {
+            text-shadow: 0 0 18px rgba(0,255,65,0.45), 0 0 36px rgba(0,255,65,0.15);
+            transform: translate(0,0);
+            filter: none;
+        }
+        90% {
+            text-shadow: -3px 0 rgba(255,0,80,0.9), 3px 0 rgba(0,229,255,0.9);
+            transform: translate(2px,0);
+            filter: brightness(1.2);
+        }
+        92% {
+            text-shadow: 3px 0 rgba(255,0,80,0.9), -3px 0 rgba(0,229,255,0.9);
+            transform: translate(-2px,0);
+        }
+        94% {
+            text-shadow: 0 0 18px rgba(0,255,65,0.45);
+            transform: translate(0,0);
+        }
+    }
+    .main-title {
+        font-size: 2.7rem;
+        font-weight: 700;
+        color: #e8f5e9;
+        letter-spacing: 0.06em;
+        line-height: 1.1;
+        animation: glitch 7s ease-in-out 1s infinite, fadeInUp 0.5s ease-out 0.1s both;
     }
     .hero-subtitle {
-        animation: slideInLeft 0.6s ease-out 0.2s both;
-        color: #475569;
-        font-size: 1.05rem;
+        font-size: 0.95rem;
+        color: var(--text);
+        margin-top: 0.6rem;
+        animation: fadeInUp 0.5s ease-out 0.25s both;
     }
     .hero-tagline {
-        animation: slideInLeft 0.6s ease-out 0.4s both;
-        color: #94a3b8;
-        font-size: 0.9rem;
+        font-size: 0.72rem;
+        color: var(--green);
+        letter-spacing: 0.18em;
+        margin-top: 0.5rem;
+        animation: fadeInUp 0.5s ease-out 0.4s both;
     }
+    .cursor {
+        display: inline-block;
+        width: 9px; height: 1em;
+        background: var(--green);
+        vertical-align: text-bottom;
+        margin-left: 2px;
+        box-shadow: 0 0 6px var(--green);
+        animation: blink 1s step-end infinite;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
 
     /* ── Risk badges ── */
     .risk-badge {
         display: inline-block;
-        padding: 0.4rem 1rem;
-        border-radius: 0.5rem;
-        font-weight: 600;
-        font-size: 0.95rem;
-        letter-spacing: 0.02em;
-        transition: transform 0.15s ease, box-shadow 0.15s ease;
+        padding: 0.28rem 0.85rem;
+        border-radius: 2px;
+        font-weight: 700;
+        font-size: 0.75rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        font-family: var(--font);
+        border: 1px solid;
+        transition: box-shadow 0.2s;
     }
-    .risk-badge:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.12);
-    }
-    .risk-Low      { background: #dcfce7; color: #166534; }
-    .risk-Medium   { background: #fef3c7; color: #92400e; }
-    .risk-High     { background: #fed7aa; color: #9a3412; }
-    .risk-Critical { background: #fecaca; color: #991b1b; }
+    .risk-Low      { color: #39ff14; border-color: #39ff14; background: rgba(57,255,20,0.07); }
+    .risk-Medium   { color: #ffaa00; border-color: #ffaa00; background: rgba(255,170,0,0.07); }
+    .risk-High     { color: #ff6600; border-color: #ff6600; background: rgba(255,102,0,0.07); }
+    .risk-Critical { color: #ff3333; border-color: #ff3333; background: rgba(255,51,51,0.07); }
 
-    /* Pulse animation for Critical/High risk */
-    @keyframes pulse {
-        0%, 100% { box-shadow: 0 0 0 0 rgba(220,38,38,0.35); }
-        50%       { box-shadow: 0 0 0 7px rgba(220,38,38,0); }
+    @keyframes critPulse {
+        0%,100% { box-shadow: 0 0 5px rgba(255,51,51,0.45), 0 0 14px rgba(255,51,51,0.2); }
+        50%      { box-shadow: 0 0 12px rgba(255,51,51,0.8), 0 0 28px rgba(255,51,51,0.4); }
     }
-    .risk-Critical { animation: pulse 1.8s ease-in-out infinite; }
-
-    @keyframes pulseOrange {
-        0%, 100% { box-shadow: 0 0 0 0 rgba(234,88,12,0.3); }
-        50%       { box-shadow: 0 0 0 6px rgba(234,88,12,0); }
+    @keyframes highPulse {
+        0%,100% { box-shadow: 0 0 5px rgba(255,102,0,0.4); }
+        50%      { box-shadow: 0 0 12px rgba(255,102,0,0.75), 0 0 24px rgba(255,102,0,0.3); }
     }
-    .risk-High { animation: pulseOrange 2s ease-in-out infinite; }
+    .risk-Critical { animation: critPulse 2s ease-in-out infinite; }
+    .risk-High     { animation: highPulse 2.3s ease-in-out infinite; }
 
-    /* ── Finding cards with hover lift ── */
+    /* ── Finding cards ── */
     .finding-card {
-        background: #f8fafc;
-        border-left: 3px solid #cbd5e1;
+        background: rgba(0,255,65,0.018);
+        border: 1px solid rgba(0,255,65,0.1);
+        border-left: 3px solid rgba(0,255,65,0.3);
         padding: 0.85rem 1rem;
         margin: 0.5rem 0;
-        border-radius: 0.35rem;
-        transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+        border-radius: 2px;
+        font-family: var(--font);
+        color: var(--text);
+        transition: transform 0.18s, box-shadow 0.18s, background 0.18s;
     }
     .finding-card:hover {
-        transform: translateX(4px);
-        box-shadow: 0 4px 14px rgba(0,0,0,0.08);
-        background: #ffffff;
+        transform: translateX(5px);
+        background: rgba(0,255,65,0.035);
     }
-    .finding-card.severity-Critical { border-left-color: #dc2626; }
-    .finding-card.severity-High     { border-left-color: #ea580c; }
-    .finding-card.severity-Medium   { border-left-color: #d97706; }
-    .finding-card.severity-Low      { border-left-color: #65a30d; }
-
-    /* ── Shimmer skeleton for loading ── */
-    @keyframes shimmer {
-        0%   { background-position: -600px 0; }
-        100% { background-position: 600px 0; }
+    .finding-card.severity-Critical {
+        border-left-color: #ff3333;
+        border-color: rgba(255,51,51,0.18);
+        background: rgba(255,51,51,0.025);
     }
-    .shimmer {
-        background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
-        background-size: 600px 100%;
-        animation: shimmer 1.4s infinite linear;
-        border-radius: 0.4rem;
-        height: 1rem;
-        margin: 0.4rem 0;
+    .finding-card.severity-Critical:hover { box-shadow: 0 0 14px rgba(255,51,51,0.22); }
+    .finding-card.severity-High {
+        border-left-color: #ff6600;
+        border-color: rgba(255,102,0,0.18);
+        background: rgba(255,102,0,0.025);
+    }
+    .finding-card.severity-High:hover { box-shadow: 0 0 14px rgba(255,102,0,0.22); }
+    .finding-card.severity-Medium {
+        border-left-color: #ffaa00;
+        border-color: rgba(255,170,0,0.18);
+        background: rgba(255,170,0,0.02);
+    }
+    .finding-card.severity-Low {
+        border-left-color: #39ff14;
+        border-color: rgba(57,255,20,0.18);
+        background: rgba(57,255,20,0.015);
     }
 
     /* ── Empty state ── */
     .empty-state {
         text-align: center;
         padding: 2rem;
-        color: #64748b;
-        background: #f8fafc;
-        border-radius: 0.5rem;
-        border: 1px dashed #cbd5e1;
-        transition: border-color 0.2s ease;
+        color: var(--text-dim);
+        background: var(--bg-card);
+        border-radius: 2px;
+        border: 1px dashed rgba(0,255,65,0.2);
+        font-family: var(--font);
+        transition: border-color 0.2s;
     }
-    .empty-state:hover { border-color: #94a3b8; }
+    .empty-state:hover { border-color: rgba(0,255,65,0.45); }
 
-    /* ── Sidebar fade-in ── */
+    /* ── Animations ── */
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(14px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
     @keyframes sidebarFade {
-        from { opacity: 0; transform: translateX(-10px); }
+        from { opacity: 0; transform: translateX(-8px); }
         to   { opacity: 1; transform: translateX(0); }
     }
-    section[data-testid="stSidebar"] {
-        animation: sidebarFade 0.5s ease-out both;
-    }
 
-    /* ── Smooth tab transitions ── */
-    .stTabs [data-baseweb="tab"] {
-        transition: color 0.2s ease, border-color 0.2s ease;
-    }
-    .stTabs [data-baseweb="tab"]:hover {
-        color: #6366f1 !important;
-    }
-
-    /* ── Button hover glow ── */
-    .stButton > button[kind="primary"] {
-        transition: box-shadow 0.2s ease, transform 0.15s ease;
-    }
-    .stButton > button[kind="primary"]:hover {
-        box-shadow: 0 0 0 3px rgba(99,102,241,0.25);
-        transform: translateY(-1px);
-    }
-
-    /* ── Hide Streamlit branding ── */
+    /* ── Hide Streamlit chrome ── */
     #MainMenu { visibility: hidden; }
     footer    { visibility: hidden; }
-
-    /* ── Section headings ── */
-    h2 { margin-top: 2rem; }
     </style>
+
+    <script>
+    /* Matrix rain canvas — injected once, persists across Streamlit rerenders */
+    (function () {
+        if (document.getElementById('matrix-bg')) return;
+        const c = document.createElement('canvas');
+        c.id = 'matrix-bg';
+        c.style.cssText = [
+            'position:fixed', 'top:0', 'left:0',
+            'width:100vw', 'height:100vh',
+            'z-index:0', 'pointer-events:none', 'opacity:0.055'
+        ].join(';');
+        document.body.prepend(c);
+        const ctx = c.getContext('2d');
+        const resize = () => { c.width = innerWidth; c.height = innerHeight; };
+        resize();
+        window.addEventListener('resize', resize);
+        const CHARS = '01アイウカキクコサシスABCDEFGHIJKLM{}[]<>/\\|_=+';
+        const FS = 13;
+        let cols, drops;
+        const init = () => {
+            cols = Math.floor(c.width / FS);
+            drops = Array.from({length: cols}, () => Math.random() * -(c.height / FS));
+        };
+        init();
+        window.addEventListener('resize', init);
+        setInterval(() => {
+            ctx.fillStyle = 'rgba(10,14,26,0.055)';
+            ctx.fillRect(0, 0, c.width, c.height);
+            ctx.font = FS + 'px monospace';
+            drops.forEach((y, i) => {
+                ctx.fillStyle = Math.random() > 0.97 ? '#e8f5e9' : '#00ff41';
+                ctx.fillText(CHARS[Math.floor(Math.random() * CHARS.length)], i * FS, y * FS);
+                if (y * FS > c.height && Math.random() > 0.975) drops[i] = 0;
+                drops[i] += 0.6;
+            });
+        }, 55);
+    })();
+    </script>
     """,
     unsafe_allow_html=True,
 )
@@ -255,9 +525,15 @@ with st.sidebar:
 
 st.markdown(
     """
-    <div class="gradient-title">🛡️ SOC 2 Analyzer</div>
-    <div class="hero-subtitle">Drop a vendor SOC 2 Type II report. Get a structured risk summary in 30 seconds.</div>
-    <div class="hero-tagline">Free forever &nbsp;·&nbsp; Bring your own Anthropic API key &nbsp;·&nbsp; Nothing is stored.</div>
+    <div class="hero-wrap">
+        <div class="terminal-prompt">
+            <span class="prompt-symbol">┌──(</span><span class="prompt-path">kaps@soc2-analyzer</span><span class="prompt-symbol">)-[</span><span class="prompt-flag">~/vendor-risk</span><span class="prompt-symbol">]</span><br>
+            <span class="prompt-symbol">└─$</span> <span class="prompt-flag">soc2-analyzer</span> <span class="prompt-path">--mode</span> analyze <span class="prompt-path">--output</span> structured-json<span class="cursor"> </span>
+        </div>
+        <div class="main-title">🛡️ SOC 2 ANALYZER</div>
+        <div class="hero-subtitle">Drop a vendor SOC 2 Type II PDF · Get a structured risk assessment in 30 seconds.</div>
+        <div class="hero-tagline">[ FREE &nbsp;·&nbsp; BYOK &nbsp;·&nbsp; ZERO DATA RETENTION &nbsp;·&nbsp; OPEN SOURCE ]</div>
+    </div>
     """,
     unsafe_allow_html=True,
 )
